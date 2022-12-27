@@ -3,21 +3,16 @@ import moment from 'moment';
 
 import { useState } from 'react';
 
-export const DateRangePicker = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+interface Props {
+  startDate: string;
+  endDate: string;
+  setStartDate: (formattedDate: string) => void;
+  setEndDate: (formattedDate: string) => void;
+}
+
+export const DateRangePicker: React.FC<Props> = ({startDate, endDate, setStartDate, setEndDate}) => {
   const [error, setError] = useState(false);
-  const [booking, setBooking] = useState({bookingCreationDate: `${moment(new Date()).format('YYYY-MM-DD')}`});
 
-  const createBooking = () => {
-    const updatedBookingDetails = {startDate: startDate, endDate: endDate}
-    setBooking({
-      ...booking,
-      ...updatedBookingDetails
-    });
-  }
-
-  // TODO: create utils for this
   const validateRange = () => {
     const unixStartDate = Math.round(new Date(startDate).getTime()/1000)
     const unixEndDate = Math.round(new Date(endDate).getTime()/1000)
@@ -25,19 +20,18 @@ export const DateRangePicker = () => {
       setError(true);
       return;
     }
-    createBooking();
   }
 
-  const onChangeStartDate = (e: { target: { value: string | number | Date; }; }) => {
+  const onChangeStartDate = (e: { target: { value: string }; }) => {
     setError(false);
-    const newDate = moment(new Date(e.target.value)).format('YYYY-MM-DD');
-    setStartDate(newDate);
+    const formattedDate = moment(new Date(e.target.value)).format('YYYY-MM-DD');
+    setStartDate(formattedDate);
   };
 
-  const onChangeEndDate = (e: { target: { value: string | number | Date; }; }) => {
+  const onChangeEndDate = (e: { target: { value: string }; }) => {
     setError(false);
-    const newDate = moment(new Date(e.target.value)).format('YYYY-MM-DD');
-    setEndDate(newDate);
+    const formattedDate = moment(new Date(e.target.value)).format('YYYY-MM-DD');
+    setEndDate(formattedDate);
   };
 
 // FIXME: make start date today
